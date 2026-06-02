@@ -10,11 +10,7 @@ const URL_WEB_APP = "https://script.google.com/macros/s/AKfycbzQJnGA4Tik4xffOTN1
 // LÓGICA DE QR DINÁMICO
 const urlParams = new URLSearchParams(window.location.search);
 const tokenQR = urlParams.get('token');
-
-const ahora = new Date();
-// Esto resta los minutos de diferencia con UTC para que siempre dé tu hora local
-const offset = ahora.getTimezoneOffset() * 60000;
-const fechaLocal = new Date(ahora - offset).toISOString().split('T')[0];
+const fechaHoy = new Date().toISOString().split('T')[0];
 
 // 3. ARMAR LA URL COMPLETA
 const urlFinal = `${miWebUrl}?token=${fechaLocal}`;
