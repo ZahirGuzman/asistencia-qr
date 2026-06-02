@@ -1,6 +1,8 @@
-¡Listo! Acá tenés el código completo con la lógica de horario integrada.
+Tenés razón, vamos a blindarlo. El problema es que new Date().getHours() a veces toma la hora del servidor o está en formato UTC, por eso te sigue dejando pasar aunque sean las 12 de la noche.
 
-Le puse un rango de 13:30 a 14:00 para darles un poquito más de tiempo por si el internet anda lento en la escuela. Acordate que si lo probás ahora, te va a tirar el error porque son las 12 de la noche.
+Acá tenés el código definitivo. Reemplacé la forma de obtener la hora por una que obliga al navegador a usar la hora oficial de Argentina, sin importar cómo esté configurada la compu o el celular.
+
+Copiá y pegá esto en tu script.js:
 
 JavaScript
 const boton = document.getElementById("btnAsistencia");
@@ -14,7 +16,9 @@ const URL_WEB_APP = "https://script.google.com/macros/s/AKfycbzQJnGA4Tik4xffOTN1
 // LÓGICA DE QR DINÁMICO
 const urlParams = new URLSearchParams(window.location.search);
 const tokenQR = urlParams.get('token');
-const fechaHoy = new Date().toLocaleDateString('en-CA'); 
+
+// Fecha formateada para Argentina (YYYY-MM-DD)
+const fechaHoy = new Date().toLocaleDateString('en-CA', {timeZone: 'America/Argentina/Buenos_Aires'}); 
 
 window.onload = () => {
     const guardadoNombre = localStorage.getItem("alumno_nombre");
@@ -29,24 +33,28 @@ window.onload = () => {
 boton.addEventListener("click", () => {
     // 1. Verificamos el token (Fecha)
     if (tokenQR !== fechaHoy) {
-        mensaje.innerHTML = "❌ QR inválido o de otra fecha.";
+        mensaje.innerHTML = `❌ QR inválido o de otra fecha. (Hoy: ${fechaHoy})`;
         mensaje.style.color = "red";
         return;
     }
 
-    // 2. VALIDACIÓN DE HORARIO (13:30 a 14:00)
+    // 2. VALIDACIÓN DE HORARIO FORZADA (Zona horaria Argentina)
     const ahora = new Date();
-    const horaActual = ahora.getHours();
-    const minutosActuales = ahora.getMinutes();
-    const tiempoTotal = (horaActual * 60) + minutosActuales;
+    const opciones = { timeZone: 'America/Argentina/Buenos_Aires', hour12: false };
+    
+    // Obtenemos hora y minutos exactos de Bs. As.
+    const horaArg = parseInt(ahora.toLocaleTimeString('es-AR', { ...opciones, hour: '2-digit' }));
+    const minArg = parseInt(ahora.toLocaleTimeString('es-AR', { ...opciones, minute: '2-digit' }));
+    
+    const tiempoTotal = (horaArg * 60) + minArg;
+    const inicioClase = (13 * 60) + 30; // 13:30
+    const finClase = (13 * 60) + 45;    // 13:45
 
-    const inicioClase = (13 * 60) + 30; //
-    const finClase = (13 * 60) + 45;    // 
-    console.log("Hora detectada por el sistema:", horaActual + ":" + minutosActuales);
-alert("El sistema dice que son las: " + horaActual + ":" + minutosActuales);
+    // Esto te sirve para ver qué hora está leyendo el código realmente
+    console.log("Hora Arg detectada:", horaArg + ":" + minArg);
 
     if (tiempoTotal < inicioClase || tiempoTotal > finClase) {
-        mensaje.innerHTML = "❌ El registro solo está habilitado de 13:30 a 14:00.";
+        mensaje.innerHTML = `❌ Registro fuera de horario. Hora actual: ${horaArg}:${minArg < 10 ? '0'+minArg : minArg}. El horario es de 13:30 a 13:45.`;
         mensaje.style.color = "orange";
         return;
     }
