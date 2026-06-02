@@ -41,9 +41,8 @@ boton.addEventListener("click", () => {
     const minArg = parseInt(ahora.toLocaleTimeString('es-AR', { minute: '2-digit', timeZone: 'America/Argentina/Buenos_Aires' }));
     const tiempoTotal = (horaArg * 60) + minArg;
     
-    const inicio = (13 * 60) + 30;
-    const fin = (13 * 60) + 45;
-
+   const inicio = (0 * 60) + 0;   // 00:00 (medianoche)
+   const fin = (1 * 60) + 59;   // 23:59 (casi medianoche)
     if (tiempoTotal < inicio || tiempoTotal > fin) {
         mensaje.innerHTML = `❌ Fuera de horario.<br>Son las ${horaArg}:${minArg < 10 ? '0'+minArg : minArg}`;
         mensaje.style.color = "orange";
