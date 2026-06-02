@@ -16,16 +16,16 @@
     <p id="url-texto"></p>
 
     <script>
-        // 1. LA URL DE TU PÁGINA (Donde subiste el index.html)
-        const miWebUrl = "https://tu-usuario.github.io/asistencia/index.html";
 
-        // 2. GENERAR EL TOKEN (Fecha de hoy: AAAA-MM-DD)
+        const miWebUrl = "https://ZahirGuzman.github.io/asistencia/index.html";
+
+  
         const hoy = new Date().toISOString().split('T')[0];
 
-        // 3. ARMAR LA URL COMPLETA
+
         const urlFinal = `${miWebUrl}?token=${hoy}`;
 
-        // 4. CREAR EL QR
+
         new QRCode(document.getElementById("qrcode"), {
             text: urlFinal,
             width: 300,
