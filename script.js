@@ -40,8 +40,8 @@ boton.addEventListener("click", () => {
     const minutosActuales = ahora.getMinutes();
     const tiempoTotal = (horaActual * 60) + minutosActuales;
 
-    const inicioClase = (13 * 60) + 30; // 13:30 -> 810 min
-    const finClase = (14 * 60) + 0;    // 14:00 -> 840 min
+    const inicioClase = (13 * 60) + 30; //
+    const finClase = (13 * 60) + 45;    // 
 
     if (tiempoTotal < inicioClase || tiempoTotal > finClase) {
         mensaje.innerHTML = "❌ El registro solo está habilitado de 13:30 a 14:00.";
