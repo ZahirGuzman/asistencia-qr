@@ -1,3 +1,8 @@
+¡Listo! Acá tenés el código completo con la lógica de horario integrada.
+
+Le puse un rango de 13:30 a 14:00 para darles un poquito más de tiempo por si el internet anda lento en la escuela. Acordate que si lo probás ahora, te va a tirar el error porque son las 12 de la noche.
+
+JavaScript
 const boton = document.getElementById("btnAsistencia");
 const mensaje = document.getElementById("mensaje");
 const inputNombre = document.getElementById("inputNombre");
@@ -9,8 +14,6 @@ const URL_WEB_APP = "https://script.google.com/macros/s/AKfycbzQJnGA4Tik4xffOTN1
 // LÓGICA DE QR DINÁMICO
 const urlParams = new URLSearchParams(window.location.search);
 const tokenQR = urlParams.get('token');
-
-// IMPORTANTE: Usamos la misma fecha que en el profe.html para que coincidan
 const fechaHoy = new Date().toLocaleDateString('en-CA'); 
 
 window.onload = () => {
@@ -24,10 +27,25 @@ window.onload = () => {
 };
 
 boton.addEventListener("click", () => {
-    // 1. Verificamos el token
+    // 1. Verificamos el token (Fecha)
     if (tokenQR !== fechaHoy) {
-        mensaje.innerHTML = "❌ QR inválido o de otra fecha. Token recibido: " + tokenQR;
+        mensaje.innerHTML = "❌ QR inválido o de otra fecha.";
         mensaje.style.color = "red";
+        return;
+    }
+
+    // 2. VALIDACIÓN DE HORARIO (13:30 a 14:00)
+    const ahora = new Date();
+    const horaActual = ahora.getHours();
+    const minutosActuales = ahora.getMinutes();
+    const tiempoTotal = (horaActual * 60) + minutosActuales;
+
+    const inicioClase = (13 * 60) + 30; // 13:30 -> 810 min
+    const finClase = (14 * 60) + 0;    // 14:00 -> 840 min
+
+    if (tiempoTotal < inicioClase || tiempoTotal > finClase) {
+        mensaje.innerHTML = "❌ El registro solo está habilitado de 13:30 a 14:00.";
+        mensaje.style.color = "orange";
         return;
     }
 
