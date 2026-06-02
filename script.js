@@ -6,7 +6,7 @@ const seccionIdentificacion = document.getElementById("seccion-identificacion");
 
 const URL_WEB_APP = "https://script.google.com/macros/s/AKfycbzQJnGA4Tik4xffOTN1xSkRXTG7E2tVGZYKj9vxbn8-XtxAGaR_1HQVOZdXcmwJfFGJ/exec";
 
-// 1. OBTENER TOKEN Y FECHA
+// OBTENER TOKEN Y FECHA
 const urlParams = new URLSearchParams(window.location.search);
 const tokenQR = (urlParams.get('token') || "").trim();
 const ahora = new Date();
@@ -21,7 +21,7 @@ window.onload = () => {
         inputEmail.value = guardadoEmail;
     }
 
-    // BLOQUEO ANTIFRAUDE: ¿Ya dio el presente hoy?
+    // BLOQUEO SI YA DIO EL PRESENTE
     const yaRegistroHoy = localStorage.getItem("asistencia_realizada_fecha");
     if (yaRegistroHoy === fechaHoy) {
         boton.disabled = true;
@@ -34,26 +34,41 @@ window.onload = () => {
 boton.addEventListener("click", () => {
     mensaje.innerHTML = "";
 
-    // VALIDACIÓN DE SEGURIDAD (FECHA)
+    // VALIDACIÓN DE SEGURIDAD CON FECHA
     if (tokenQR !== fechaHoy) {
         mensaje.innerHTML = `❌ QR inválido o de otra fecha.`;
         mensaje.style.color = "red";
         return;
     }
 
-    const nombre = inputNombre.value.trim();
+    // LIMPIEZA Y FORMATEO DE NOMBRE 
+    let nombreSucio = inputNombre.value.trim();
     const email = inputEmail.value.trim();
 
-    // --- NUEVA VALIDACIÓN DE MAIL ---
+    // Validar que tenga al menos un espacio (Nombre y Apellido)
+    if (!nombreSucio.includes(" ")) {
+        alert("Por favor, ingresá nombre y apellido separados por un espacio.");
+        return;
+    }
+
+    // Convertir a "Formato De Nombre" (Mayúsculas en cada palabra)
+    const nombre = nombreSucio
+        .toLowerCase()
+        .split(' ')
+        .filter(palabra => palabra !== "")
+        .map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1))
+        .join(' ');
+
+
+    // VALIDACIÓN DE MAIL
     const patronEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!patronEmail.test(email)) {
         alert("Por favor, ingresá un correo electrónico válido (ejemplo@mail.com).");
         return;
     }
-    // --------------------------------
 
-    if (nombre.length < 3) {
-        alert("Por favor, ingresá tu nombre completo.");
+    if (nombre.length < 5) {
+        alert("El nombre es demasiado corto.");
         return;
     }
 
