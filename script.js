@@ -77,7 +77,7 @@ boton.addEventListener("click", () => {
     const minArg = parseInt(ahora.toLocaleTimeString('es-AR', { minute: '2-digit', timeZone: 'America/Argentina/Buenos_Aires' }));
     const tiempoTotal = (horaArg * 60) + minArg;
     
-    const inicio = (13 * 60) + 45; 
+    const inicio = (1 * 60) + 30; 
     const fin = (14 * 60) + 0; 
 
     if (tiempoTotal < inicio || tiempoTotal > fin) {
