@@ -42,6 +42,8 @@ boton.addEventListener("click", () => {
 
     const inicioClase = (13 * 60) + 30; //
     const finClase = (13 * 60) + 45;    // 
+    console.log("Hora detectada por el sistema:", horaActual + ":" + minutosActuales);
+alert("El sistema dice que son las: " + horaActual + ":" + minutosActuales);
 
     if (tiempoTotal < inicioClase || tiempoTotal > finClase) {
         mensaje.innerHTML = "❌ El registro solo está habilitado de 13:30 a 14:00.";
