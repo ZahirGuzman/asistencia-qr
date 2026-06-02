@@ -17,32 +17,42 @@ const fechaHoy = ahora.toLocaleDateString('en-CA', {timeZone: 'America/Argentina
 window.onload = () => {
     const guardadoNombre = localStorage.getItem("alumno_nombre");
     const guardadoEmail = localStorage.getItem("alumno_email");
+    
+    // LOGIN AUTOMÁTICO
     if (guardadoNombre && guardadoEmail) {
         inputNombre.value = guardadoNombre;
         inputEmail.value = guardadoEmail;
     }
+
+    // BLOQUEO ANTIFRAUDE: ¿Ya dio el presente hoy este celular?
+    const yaRegistroHoy = localStorage.getItem("asistencia_realizada_fecha");
+    if (yaRegistroHoy === fechaHoy) {
+        boton.disabled = true;
+        mensaje.innerHTML = "✅ Ya registraste tu asistencia el día de hoy.";
+        mensaje.style.color = "blue";
+        seccionIdentificacion.style.display = "none";
+    }
 };
 
 boton.addEventListener("click", () => {
-    // RESET MENSAJE
     mensaje.innerHTML = "";
 
     // VALIDACIÓN DE SEGURIDAD (FECHA)
-    // Comparamos sin importar si hay espacios locos
     if (tokenQR !== fechaHoy) {
         mensaje.innerHTML = `❌ Error de Validación.<br>Recibido: [${tokenQR}]<br>Esperado: [${fechaHoy}]`;
         mensaje.style.color = "red";
         return;
     }
 
-    // VALIDACIÓN DE HORARIO (13:30 a 13:45)
-    // PARA PROBAR AHORA: Si querés que funcione ya, cambiá el 13 por 00
+    // VALIDACIÓN DE HORARIO
     const horaArg = parseInt(ahora.toLocaleTimeString('es-AR', { hour: '2-digit', hour12: false, timeZone: 'America/Argentina/Buenos_Aires' }));
     const minArg = parseInt(ahora.toLocaleTimeString('es-AR', { minute: '2-digit', timeZone: 'America/Argentina/Buenos_Aires' }));
     const tiempoTotal = (horaArg * 60) + minArg;
     
-   const inicio = (0 * 60) + 0;   // 00:00 (medianoche)
-   const fin = (1 * 60) + 59;   // 23:59 (casi medianoche)
+    // Horario actual de prueba (00:00 a 23:59)
+    const inicio = (0 * 60) + 0;
+    const fin = (23 * 60) + 59;
+
     if (tiempoTotal < inicio || tiempoTotal > fin) {
         mensaje.innerHTML = `❌ Fuera de horario.<br>Son las ${horaArg}:${minArg < 10 ? '0'+minArg : minArg}`;
         mensaje.style.color = "orange";
@@ -74,8 +84,13 @@ boton.addEventListener("click", () => {
             mensaje.innerHTML = "✅ Presente registrado con éxito.";
             mensaje.style.color = "green";
             seccionIdentificacion.style.display = "none";
+            
+            // MARCAMOS EL DISPOSITIVO PARA QUE NO PUEDA REPETIR HOY
             localStorage.setItem("alumno_nombre", nombre);
             localStorage.setItem("alumno_email", email);
+            localStorage.setItem("asistencia_realizada_fecha", fechaHoy);
+            
+            boton.disabled = true; // Bloqueamos el botón definitivamente
         }).catch(() => {
             mensaje.innerHTML = "❌ Error al conectar con la planilla.";
             boton.disabled = false;
