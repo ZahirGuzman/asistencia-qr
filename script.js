@@ -4,7 +4,7 @@ const inputNombre = document.getElementById("inputNombre");
 const inputEmail = document.getElementById("inputEmail");
 const seccionIdentificacion = document.getElementById("seccion-identificacion");
 
-const URL_WEB_APP = "https://script.google.com/macros/s/AKfycbzQJnGA4Tik4xffOTN1xSkRXTG7E2tVGZYKj9vxbn8-XtxAGaR_1HQVOZdXcmwJfFGJ/exec";
+const URL_WEB_APP = "https://script.google.com/macros/s/AKfycbxOjsW4PkxH-mPnvB0TBmwlQeg857o3WYZ6cMbgvhclK5HPQN_1LguXzTYokMQvsgxk/exec";
 
 // OBTENER TOKEN Y FECHA
 const urlParams = new URLSearchParams(window.location.search);
