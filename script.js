@@ -4,16 +4,14 @@ const inputNombre = document.getElementById("inputNombre");
 const inputEmail = document.getElementById("inputEmail");
 const seccionIdentificacion = document.getElementById("seccion-identificacion");
 
-// CONFIGURACIÓN: Pegá acá la URL que te dio Google Apps Script al publicar
 const URL_WEB_APP = "https://script.google.com/macros/s/AKfycbzQJnGA4Tik4xffOTN1xSkRXTG7E2tVGZYKj9vxbn8-XtxAGaR_1HQVOZdXcmwJfFGJ/exec";
 
 // LÓGICA DE QR DINÁMICO
 const urlParams = new URLSearchParams(window.location.search);
 const tokenQR = urlParams.get('token');
-const fechaHoy = new Date().toISOString().split('T')[0];
 
-// 3. ARMAR LA URL COMPLETA
-const urlFinal = `${miWebUrl}?token=${fechaLocal}`;
+// IMPORTANTE: Usamos la misma fecha que en el profe.html para que coincidan
+const fechaHoy = new Date().toLocaleDateString('en-CA'); 
 
 window.onload = () => {
     const guardadoNombre = localStorage.getItem("alumno_nombre");
@@ -26,8 +24,10 @@ window.onload = () => {
 };
 
 boton.addEventListener("click", () => {
+    // 1. Verificamos el token
     if (tokenQR !== fechaHoy) {
-        mensaje.innerHTML = "❌ QR inválido o de otra fecha.";
+        mensaje.innerHTML = "❌ QR inválido o de otra fecha. Token recibido: " + tokenQR;
+        mensaje.style.color = "red";
         return;
     }
 
@@ -47,7 +47,7 @@ boton.addEventListener("click", () => {
         return;
     }
 
-    mensaje.innerHTML = "Enviando presente...";
+    mensaje.innerHTML = "Validando ubicación y enviando...";
     boton.disabled = true;
 
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -63,10 +63,11 @@ boton.addEventListener("click", () => {
             mode: "no-cors",
             body: JSON.stringify(datos)
         }).then(() => {
-            mensaje.innerHTML = "✅ Presente registrado.";
+            mensaje.innerHTML = "✅ Presente registrado con éxito.";
+            mensaje.style.color = "#27ae60";
             seccionIdentificacion.style.display = "none";
         }).catch(() => {
-            mensaje.innerHTML = "Error al enviar.";
+            mensaje.innerHTML = "Error al enviar a la planilla.";
             boton.disabled = false;
         });
     }, () => {
