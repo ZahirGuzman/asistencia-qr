@@ -2,37 +2,36 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Generador de QR de Asistencia</title>
+    <title>Panel del Profesor - Generador QR</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #2c3e50; color: white; }
-        #qrcode { background: white; padding: 20px; border-radius: 10px; }
-        h2 { margin-bottom: 10px; }
+        body { font-family: sans-serif; text-align: center; padding: 50px; }
+        #qrcode { margin-top: 20px; display: flex; justify-content: center; }
     </style>
 </head>
 <body>
-    <h2>Escaneen para el Presente</h2>
+    <h1>Asistencia - QR del Día</h1>
     <div id="qrcode"></div>
     <p id="url-texto"></p>
 
     <script>
-
+     
         const miWebUrl = "https://ZahirGuzman.github.io/asistencia-qr/index.html";
 
-  
-        const hoy = new Date().toISOString().split('T')[0];
+
+        const fechaLocal = new Date().toLocaleDateString('en-CA'); 
 
 
-        const urlFinal = `${miWebUrl}?token=${hoy}`;
-
+        const urlFinal = miWebUrl + "?token=" + fechaLocal;
 
         new QRCode(document.getElementById("qrcode"), {
             text: urlFinal,
-            width: 300,
-            height: 300
+            width: 256,
+            height: 256
         });
 
-        document.getElementById("url-texto").innerText = "Token del día: " + hoy;
+
+        document.getElementById("url-texto").innerText = "Link generado: " + urlFinal;
     </script>
 </body>
 </html>
